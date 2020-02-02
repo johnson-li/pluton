@@ -1,0 +1,63 @@
+bind_zone_dir: /etc/bind/zones
+bind_zone_file_mode: '0660'
+bind_allow_query:
+  - any
+bind_listen_ipv4:
+  - any
+bind_listen_ipv6:
+  - any
+bind_acls:
+  - name: acl1
+    match_list:
+      - 0.0.0.0/0
+bind_forwarders:
+  - '8.8.8.8'
+  - '8.8.4.4'
+bind_recursion: false
+bind_query_log: 'data/query.log'
+bind_check_names: 'master ignore'
+bind_zone_master_server_ip: 10.22.1.51
+bind_zone_minimum_ttl: "2D"
+bind_zone_ttl: "2W"
+bind_zone_time_to_refresh: "2D"
+bind_zone_time_to_retry: "2H"
+bind_zone_time_to_expire: "2W"
+bind_zone_domains:
+  - name: '5gmobix.xuebing.li'
+    networks:
+      - '10.22.1'
+    name_servers:
+      - ns1
+    hosts:
+      - name: ns1
+        ip: 10.22.1.51
+        aliases:
+          - dns
+      - name: upf
+        ip: 10.22.1.50
+        aliases:
+          - www
+      - name: eatw
+        ip: 10.22.1.52
+      - name: mail
+        ip: 10.22.1.51
+        aliases:
+          - smtp
+          - imap
+          - mail-in
+          - mail-out
+    mail_servers:
+      - name: mail
+        preference: 10
+    services:
+      - name: _ldap._tcp
+        weight: 100
+        port: 88
+        target: eatw
+    text:
+      - name: _kerberos
+        text: KERBEROS.5GMOBIX.XUEBING.LI
+      - name: '@'
+        text:
+          - 'some text'
+          - 'more text'

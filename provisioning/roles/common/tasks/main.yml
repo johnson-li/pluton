@@ -1,0 +1,22 @@
+- name: Install essential softwares from apt
+  become_user: root
+  apt: 
+      name: git,zsh,vim,tmux,bzip2,traceroute
+      update_cache: yes
+- name: Add user 
+  become_user: root
+  user: 
+      name: johnson
+      # password: johnsonjohnson
+      password: '$6$.vg9Yuf936J5GE7b$DMmOJKhX1wkHm3IRgNcU0fDT26inBRTr6bB5B3F5GkEyLEph6qUy4KtwnRyoEED.HsYk3VHUPFxDJe3rfttuT1'
+      groups: sudo 
+      state: present
+      shell: /bin/zsh
+      createhome: yes
+- name: Set ssh key
+  become_user: johnson
+  authorized_key:
+      user: johnson
+      state: present
+      key: "{{ lookup('file', '/home/lix16/.ssh/id_rsa.pub') }}"
+
